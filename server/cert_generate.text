@@ -12,3 +12,19 @@ openssl req \
 <(printf '[SAN]subjectAltName=DNS:localhost')) \
 -sha256 \
 -days 3650
+
+Ubuntu Version, make sure open ssl is installed first (just type openssl on terminal)
+openssl req \
+-newkey rsa:2048 \
+-x509 \
+-nodes \
+-keyout key.pem \
+-new \
+-out cert.pem \
+-subj /CN=localhost \
+-reqexts SAN \
+-extensions SAN \
+-config <(cat /usr/local/ssl/openssl.cnf \
+<(printf '[SAN]subjectAltName=DNS:localhost')) \
+-sha256 \
+-days 3650
