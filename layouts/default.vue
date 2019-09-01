@@ -3,7 +3,7 @@
         <div class="container menu">
             <life-nav></life-nav>
         </div>
-        <div class="container column is-10">
+        <div class="container column is-12">
             <nuxt />
         </div>
     </div>

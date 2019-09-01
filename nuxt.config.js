@@ -76,6 +76,7 @@ module.exports = {
      ** See https://axios.nuxtjs.org/options
      */
     axios: {},
+    serverMiddleware: ['~/unsplash/index.js'],
     /*
      ** Build configuration
      */
