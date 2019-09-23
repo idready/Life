@@ -25,7 +25,8 @@ module.exports = {
             },
             {
                 rel: 'stylesheet',
-                href: 'https://fonts.googleapis.com/css?family=Satisfy&display=swap'
+                href:
+                    'https://fonts.googleapis.com/css?family=Satisfy&display=swap'
             }
         ]
     },
@@ -57,8 +58,19 @@ module.exports = {
         // Doc: https://axios.nuxtjs.org/usage
         '@nuxtjs/axios',
         '@nuxtjs/pwa',
+        '@nuxtjs/dotenv',
         '@nuxtjs/style-resources'
     ],
+    env: {
+        applicationId: process.env.APPLICATION_ID,
+        secret: process.env.SECRET,
+        baseUrl: process.env.BASE_URL || 'http://localhost:3000',
+        unsplashUrls: {
+            BASE: 'https://api.unsplash.com/',
+            RANDOM: { verb: 'GET', url: 'photos/random' },
+            SEARCH: { verb: 'GET', url: 'search/photos' }
+        }
+    },
     /*
      ** Share variables, mixins, functions across all style files (no @import needed)
      ** See https://github.com/nuxt-community/style-resources-module
@@ -76,7 +88,9 @@ module.exports = {
      ** See https://axios.nuxtjs.org/options
      */
     axios: {},
-    serverMiddleware: ['~/unsplash/index.js'],
+    serverMiddleware: [
+        { path: '/unsplash-api', handler: '~/unsplash/index.js' }
+    ],
     /*
      ** Build configuration
      */
@@ -86,7 +100,8 @@ module.exports = {
          */
         extend(config, ctx) {
             config.node = {
-                fs: 'empty'
+                fs: 'empty',
+                net: 'empty'
             }
         }
     }
