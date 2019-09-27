@@ -1,3 +1,4 @@
+/* eslint camelcase: ["error", {properties: "never"}] */
 import { URLSearchParams } from 'url'
 
 export const state = () => ({
@@ -30,9 +31,34 @@ export const actions = {
             )
             if (response.ok) {
                 const json = await response.json()
-                const result = Array.isArray(json) ? json : [json]
+                let result = Array.isArray(json) ? json : [json]
+                result = result.map(
+                    ({
+                        categories,
+                        color, // created_at,
+                        description,
+                        id,
+                        likes, // updated_at,
+                        urls,
+                        user,
+                        views,
+                        height,
+                        width
+                    }) => ({
+                        categories,
+                        color,
+                        // created_at,
+                        description,
+                        id,
+                        likes, // updated_at,
+                        urls,
+                        user,
+                        views,
+                        height,
+                        width
+                    })
+                )
                 commit('add', result)
-                localStorage.setItem('unsplash_images', JSON.stringify(result))
             } else {
                 // eslint-disable-next-line
                 console.error('Bro something went wrong ' + response.url)

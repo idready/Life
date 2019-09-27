@@ -1,14 +1,8 @@
 <template>
     <section class="section">
-        <h2 class="title is-3 has-text-grey">
-            "Just start <b-icon icon="rocket" size="is-large" />"
-        </h2>
-        <h3 class="subtitle is-6 has-text-grey">
-            Author:
-            <a href="https://github.com/anteriovieira">
-                Antério Vieira
-            </a>
-        </h3>
+        <picture v-for="image in images" v-bind:key="image.id">
+            <img :src="image.urls.regular" :alt="image.description" />
+        </picture>
     </section>
 </template>
 
@@ -28,11 +22,25 @@ export default {
             ]
         }
     },
+    data() {
+        return {
+            images: []
+        }
+    },
     // computed: mapState(['images']),
     async fetch({ store, params }) {
         await store.dispatch('getUnsplashImages')
     },
     mounted() {
+        if (this.$store.state.images.length) {
+            localStorage.setItem(
+                'unsplash_images',
+                JSON.stringify(this.$store.state.images)
+            )
+            this.images = this.$store.state.images
+        } else {
+            this.images = JSON.parse(localStorage.getItem('unsplash_images'))
+        }
         // eslint-disable-next-line
         console.log(this.$store.state.images)
     }
