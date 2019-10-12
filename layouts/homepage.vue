@@ -3,7 +3,7 @@
         <div class="container menu">
             <life-nav></life-nav>
         </div>
-        <div class="container column is-12">
+        <div class="container-fluid is-paddingless column is-12">
             <nuxt />
         </div>
     </div>
@@ -13,6 +13,14 @@
 html,
 body {
     font-size: 10px;
+}
+
+.menu {
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 2rem;
+    z-index: 2;
 }
 </style>
 

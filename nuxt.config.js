@@ -89,8 +89,15 @@ module.exports = {
      */
     axios: {},
     serverMiddleware: [
-        { path: '/unsplash-api', handler: '~/unsplash/index.js' }
+        {
+            path: '/unsplash-api',
+            handler: '~/serverMiddleware/unsplash/index.js'
+        }
     ],
+    // This is configured middleware for any route change event
+    // router: {
+    //     middleware: ['unsplash']
+    // },
     /*
      ** Build configuration
      */
