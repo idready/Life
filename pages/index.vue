@@ -4,6 +4,7 @@
             <img
                 :src="image.urls.regular"
                 :alt="image.description || 'Image description'"
+                loading="lazy"
             />
         </picture>
     </section>
@@ -12,11 +13,21 @@
 <style lang="scss" scoped>
 .images-container {
     display: grid;
+    grid-gap: 0.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 0.3rem;
+    // grid-auto-rows: minmax(100px, auto);
+    grid-auto-rows: minmax(100px, auto);
+    grid-auto-flow: dense;
 }
 .image-item {
+    &,
+    img {
+        line-height: 0;
+    }
     img {
         @include tablet {
-            width: 50%;
+            width: 100%;
         }
     }
 }
