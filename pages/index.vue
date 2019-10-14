@@ -17,6 +17,7 @@
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     grid-gap: 0.3rem;
     // grid-auto-rows: minmax(100px, auto);
+    // grid-auto-rows: 200px;
     grid-auto-rows: minmax(100px, auto);
     grid-auto-flow: dense;
 }
@@ -71,6 +72,33 @@ export default {
         }
         // eslint-disable-next-line
         console.log(this.$store.state.images)
+    },
+    methods: {
+        resizeAllGridItems() {
+            const allItems = document.getElementsByClassName('item')
+            for (let x = 0; x < allItems.length; x++) {
+                this.resizeGridItem(allItems[x])
+            }
+        },
+        resizeGridItem(item) {
+            const grid = document.getElementsByClassName('images-container')[0]
+            const rowHeight = parseInt(
+                window.getComputedStyle(grid).getPropertyValue('grid-auto-rows')
+            )
+            const rowGap = parseInt(
+                window.getComputedStyle(grid).getPropertyValue('grid-row-gap')
+            )
+            const rowSpan = Math.ceil(
+                (item.querySelector('img').getBoundingClientRect().height +
+                    rowGap) /
+                    (rowHeight + rowGap)
+            )
+            item.style.gridRowEnd = 'span ' + rowSpan
+        },
+        setListeners() {
+            window.addEventListener('onload', this.resizeAllGridItems)
+            window.addEventListener('resize', this.resizeAllGridItems)
+        }
     }
 }
 </script>
