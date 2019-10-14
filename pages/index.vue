@@ -17,8 +17,7 @@
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     grid-gap: 0.3rem;
     // grid-auto-rows: minmax(100px, auto);
-    // grid-auto-rows: 200px;
-    grid-auto-rows: minmax(100px, auto);
+    grid-auto-rows: 40px;
     grid-auto-flow: dense;
 }
 .image-item {
@@ -70,12 +69,14 @@ export default {
         } else {
             this.images = JSON.parse(localStorage.getItem('unsplash_images'))
         }
+        this.resizeAllGridItems()
+        this.setListeners()
         // eslint-disable-next-line
         console.log(this.$store.state.images)
     },
     methods: {
         resizeAllGridItems() {
-            const allItems = document.getElementsByClassName('item')
+            const allItems = document.getElementsByClassName('image-item')
             for (let x = 0; x < allItems.length; x++) {
                 this.resizeGridItem(allItems[x])
             }
@@ -94,6 +95,10 @@ export default {
                     (rowHeight + rowGap)
             )
             item.style.gridRowEnd = 'span ' + rowSpan
+        },
+        resizeInstance(instance) {
+            const item = instance.elements[0]
+            this.resizeGridItem(item)
         },
         setListeners() {
             window.addEventListener('onload', this.resizeAllGridItems)
