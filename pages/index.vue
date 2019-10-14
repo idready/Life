@@ -1,40 +1,76 @@
 <template>
-    <section class="section">
-        <!-- <div class="columns is-mobile">
-            <card title="Free" icon="github-circle">
-                Open source on
-                <a href="https://github.com/buefy/buefy">
-                    GitHubs
-                </a>
-            </card>
-
-            <card title="Responsive" icon="cellphone-link">
-                <b class="has-text-grey">
-                    Every
-                </b>
-                component is responsive
-            </card>
-
-            <card title="Modern" icon="alert-decagram">
-                Built with
-                <a href="https://vuejs.org/">
-                    Vue.js
-                </a>
-                and
-                <a href="http://bulma.io/">
-                    Bulma
-                </a>
-            </card>
-
-            <card title="Lightweight" icon="arrange-bring-to-front">
-                No other internal dependency
-            </card>
-        </div> -->
+    <section class="images-container">
+        <picture v-for="image in images" :key="image.id" class="image-item">
+            <img
+                :src="image.urls.regular"
+                :alt="image.description || 'Image description'"
+                loading="lazy"
+            />
+        </picture>
     </section>
 </template>
 
+<style lang="scss" scoped>
+.images-container {
+    display: grid;
+    grid-gap: 0.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 0.3rem;
+    // grid-auto-rows: minmax(100px, auto);
+    grid-auto-rows: minmax(100px, auto);
+    grid-auto-flow: dense;
+}
+.image-item {
+    &,
+    img {
+        line-height: 0;
+    }
+    img {
+        @include tablet {
+            width: 100%;
+        }
+    }
+}
+</style>
 <script>
+// import { mapState } from 'vuex'
+
 export default {
-    name: 'HomePage'
+    // middleware: 'unsplash',
+    layout: 'homepage',
+    head() {
+        return {
+            title: 'Life, enjoy Life!',
+            meta: [
+                {
+                    hid: 'description',
+                    name: 'description',
+                    content: 'A playground with nuxt framework'
+                }
+            ]
+        }
+    },
+    data() {
+        return {
+            images: []
+        }
+    },
+    // computed: mapState(['images']),
+    async fetch({ store, params }) {
+        await store.dispatch('getUnsplashImages')
+    },
+    mounted() {
+        if (this.$store.state.images.length) {
+            localStorage.setItem(
+                'unsplash_images',
+                JSON.stringify(this.$store.state.images)
+            )
+            this.images = this.$store.state.images
+        } else {
+            this.images = JSON.parse(localStorage.getItem('unsplash_images'))
+        }
+        // eslint-disable-next-line
+        console.log(this.$store.state.images)
+    }
 }
 </script>
