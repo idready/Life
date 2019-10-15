@@ -5,28 +5,30 @@ require('isomorphic-fetch')
 
 require('dotenv').config()
 
-import { URLSearchParams } from 'url'
 const fetch = require('node-fetch')
-
+const fs = require('fs')
 
 export default function (req, res, next) {
 
-    // const Unsplash = require('unsplash-js').default
+    const reqData = [{}] || null;
+    let concatenadData = [];
+    if (reqData && !reqData.length) {
+        res.status(500).send('Please provide data')
+        return;
+    }
 
-    // const unsplashInstance = new Unsplash({
-    //     applicationId: `${process.env.APPLICATION_ID}`,
-    //     secret: `${process.env.SECRET}`
-    // })
-
-    // unsplashInstance.photos.getRandomPhoto({count: 100})
-    // .then(toJson)
-    // .then((json) => {
-    //     console.log('From Api ', json)
-    //     return res.end(json);
-    // })
-    // .catch((error) => {
-    //     console.log(error)
-    // })
+    concatenadData = [...reqData]
+    fs.readFile(process.env.catalogPath, (err, data) => {
+        if (err) {
+            fs.writeFile(process.env.catalogPath, [], (err, data) => {
+                if (err) {
+                    throw (`Can't write original file \n ${err}`);
+                }
+                console.log('File write successfull')
+            })
+        }
+        concatenadData = [].concat(concatenadData, data)
+    })
     res.send('Hello world')
     next()
 }

@@ -72,7 +72,8 @@ module.exports = {
             BASE: 'https://api.unsplash.com/',
             RANDOM: { verb: 'GET', url: 'photos/random' },
             SEARCH: { verb: 'GET', url: 'search/photos' }
-        }
+        },
+        catalogPath: '/assets/catalog.json'
     },
     /*
      ** Share variables, mixins, functions across all style files (no @import needed)

@@ -4,7 +4,7 @@
             <img
                 :src="image.urls.regular"
                 :alt="image.description || 'Image description'"
-                loading="lazy"
+                decoding="auto"
             />
         </picture>
     </section>
@@ -69,7 +69,9 @@ export default {
         } else {
             this.images = JSON.parse(localStorage.getItem('unsplash_images'))
         }
-        this.resizeAllGridItems()
+        setTimeout(() => {
+            this.resizeAllGridItems()
+        }, 3000)
         this.setListeners()
         // eslint-disable-next-line
         console.log(this.$store.state.images)
@@ -94,7 +96,7 @@ export default {
                     rowGap) /
                     (rowHeight + rowGap)
             )
-            item.style.gridRowEnd = 'span ' + rowSpan
+            item.style.gridRowEnd = 'span ' + rowSpan // Why -1 ?
         },
         resizeInstance(instance) {
             const item = instance.elements[0]
