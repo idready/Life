@@ -1,6 +1,6 @@
 <template>
     <div class="columns is-centered">
-        <div class="column is-narrow">
+        <div class="column is-narrow is-paddingless">
             <life-logo></life-logo>
         </div>
     </div>

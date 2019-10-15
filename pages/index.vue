@@ -13,14 +13,14 @@
 <style lang="scss" scoped>
 .images-container {
     display: grid;
-    grid-gap: 0.5rem;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    grid-gap: 0.3rem;
+    grid-gap: 3px;
     // grid-auto-rows: minmax(100px, auto);
     grid-auto-rows: 40px;
     grid-auto-flow: dense;
 }
 .image-item {
+    border: 1px solid tomato;
     &,
     img {
         line-height: 0;
@@ -92,8 +92,7 @@ export default {
                 window.getComputedStyle(grid).getPropertyValue('grid-row-gap')
             )
             const rowSpan = Math.ceil(
-                (item.querySelector('img').getBoundingClientRect().height +
-                    rowGap) /
+                (item.querySelector('img').getBoundingClientRect().height + 0) /
                     (rowHeight + rowGap)
             )
             item.style.gridRowEnd = 'span ' + rowSpan // Why -1 ?

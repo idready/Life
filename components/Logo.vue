@@ -1,5 +1,5 @@
 <template>
-    <div class="logo-container">
+    <div class="logo-container is-inline-block">
         <svg
             width="923px"
             height="923px"
@@ -51,16 +51,19 @@
     align-items: center;
     background: #4a90e2;
     border-radius: 50%;
-    border: 1px solid white;
+    border: 1px solid $white;
     color: $white;
-    display: flex;
-    justify-content: center;
     height: 11.5rem;
     font-size: 2rem;
     width: 11.5rem;
+    transition: all 0.2s ease;
+    @include tablet {
+        height: 12.5rem;
+        width: 12.5rem;
+    }
     svg {
         height: 100%;
-        width: 100%;
+        width: 100%;   
     }
 }
 .text {

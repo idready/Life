@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="container menu">
+        <div class="container menu has-text-centered">
             <life-nav></life-nav>
         </div>
         <div class="container-fluid is-paddingless column is-12">
