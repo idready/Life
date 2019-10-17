@@ -3,7 +3,6 @@
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
 
-// require('dotenv').config()
 require('dotenv/config')
 
 const fetch = require('node-fetch')
@@ -12,6 +11,7 @@ const fs = require('fs')
 
 export default function (req, res, next) {
 
+    console.log(req.body)
     const reqData = [{}] || null;
     let concatenadData = [];
     if (reqData && !reqData.length) {
@@ -20,19 +20,19 @@ export default function (req, res, next) {
     }
 
     concatenadData = [...reqData]
-    const catalogPath = `../..${process.env.catalogPath}`
-    console.log(catalogPath)
-    fs.readFile(catalogPath, (err, data) => {
-        if (err) {
-            console.log(err)
-            fs.writeFile(catalogPath, [], (error, data) => {
-                if (error) {
-                    throw (`Can't write original file \n ${error}`);
+    console.log(process.env.CATALOG_PATH)
+    fs.readFile(process.env.CATALOG_PATH, (err, data) => {
+        if (!err) {
+            fs.writeFile(`${process.env.CATALOG_PATH}`, [], (err, data) => {
+                if (err) {
+                    throw (`Can't write original file \n ${err}`)
                 }
                 console.log('File write successfull')
             })
         }
         concatenadData = [].concat(concatenadData, data)
+        res.json(concatenadData)
+        return
     })
     res.send('Hello world')
     next()

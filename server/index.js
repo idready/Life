@@ -32,10 +32,10 @@ async function start() {
         await nuxt.ready()
     }
     // Middlewares
-    // app.use(bodyParser.urlencoded())
-    app.use(bodyParser.json())
     // Give nuxt middleware to express
     app.use(nuxt.render)
+    // app.use(bodyParser.urlencoded())
+    app.use(bodyParser.json())
 
     const server = http.createServer(options, app)
     // const server = https.createServer(options, app)
