@@ -51,7 +51,7 @@
     align-items: center;
     background: #4a90e2;
     border-radius: 50%;
-    border: 1px solid $white;
+    border: 2px solid $white;
     color: $white;
     height: 11.5rem;
     font-size: 2rem;
@@ -63,7 +63,7 @@
     }
     svg {
         height: 100%;
-        width: 100%;   
+        width: 100%;
     }
 }
 .text {

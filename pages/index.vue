@@ -21,6 +21,7 @@
 }
 .image-item {
     border: 1px solid tomato;
+    overflow: hidden;
     &,
     img {
         line-height: 0;
@@ -69,10 +70,11 @@ export default {
         } else {
             this.images = JSON.parse(localStorage.getItem('unsplash_images'))
         }
-        setTimeout(() => {
-            this.resizeAllGridItems()
-        }, 3000)
+        this.resizeAllGridItems()
         this.setListeners()
+        window.dispatchEvent(
+            new Event('resize', { bubbles: true, cancelable: false })
+        )
         // eslint-disable-next-line
         console.log(this.$store.state.images)
     },
@@ -80,7 +82,7 @@ export default {
         resizeAllGridItems() {
             const allItems = document.getElementsByClassName('image-item')
             for (let x = 0; x < allItems.length; x++) {
-                this.resizeGridItem(allItems[x])
+                window.imagesLoaded(allItems[x], this.resizeInstance)
             }
         },
         resizeGridItem(item) {
@@ -91,8 +93,9 @@ export default {
             const rowGap = parseInt(
                 window.getComputedStyle(grid).getPropertyValue('grid-row-gap')
             )
-            const rowSpan = Math.ceil(
-                (item.querySelector('img').getBoundingClientRect().height + 0) /
+            const rowSpan = Math.floor(
+                (item.querySelector('img').getBoundingClientRect().height +
+                    rowGap) /
                     (rowHeight + rowGap)
             )
             item.style.gridRowEnd = 'span ' + rowSpan // Why -1 ?

@@ -9,31 +9,39 @@ const fetch = require('node-fetch')
 const path = require('path')
 const fs = require('fs')
 
-export default function (req, res, next) {
+export default async function (req, res) {
 
-    console.log(req.body)
-    const reqData = [{}] || null;
-    let concatenadData = [];
-    if (reqData && !reqData.length) {
+    const reqData = req.body
+    let concatenadData = []
+    if (!reqData) {
         res.status(500).send('Please provide data')
-        return;
+        return
     }
 
-    concatenadData = [...reqData]
-    console.log(process.env.CATALOG_PATH)
-    fs.readFile(process.env.CATALOG_PATH, (err, data) => {
-        if (!err) {
-            fs.writeFile(`${process.env.CATALOG_PATH}`, [], (err, data) => {
-                if (err) {
-                    throw (`Can't write original file \n ${err}`)
+    try {
+        let data = []
+        await fs.readFile(`${process.env.CATALOG_PATH}`, {encoding: 'utf8'}, (err, fileData) => { 
+            if (!err) {
+                data = JSON.parse(fileData)
+                console.log(typeof data)
+                return
+            }
+            console.log('Error on read '+err)
+        })
+
+        if (data.length) {
+            // Add new data
+            res.send('Ok')
+        } else {
+            await fs.writeFile(`${process.env.CATALOG_PATH}`, JSON.stringify([{}]), (err) => {
+                if (!err) {
+                    res.send('ok with initial file write')
+                    return
                 }
-                console.log('File write successfull')
+                res.send(`Can't wrote file ${process.env.CATALOG_PATH}`)
             })
         }
-        concatenadData = [].concat(concatenadData, data)
-        res.json(concatenadData)
-        return
-    })
-    res.send('Hello world')
-    next()
+    } catch (error) {
+        res.status(500).send(`Error message : ${error}`)
+    }
 }

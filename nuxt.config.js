@@ -31,6 +31,14 @@ module.exports = {
                 href:
                     'https://fonts.googleapis.com/css?family=Satisfy&display=swap'
             }
+        ],
+        script: [
+            {
+                src:
+                    'https://unpkg.com/imagesloaded@4.1.4/imagesloaded.pkgd.min.js',
+                async: false,
+                defer: true
+            }
         ]
     },
     /*
