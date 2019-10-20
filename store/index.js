@@ -23,8 +23,6 @@ export const actions = {
                     Authorization: `Client-ID ${process.env.APPLICATION_ID}`
                 }
             }
-            // eslint-disable-next-line
-            console.log('store')
             const response = await fetch(
                 `${process.env.unsplashUrls.BASE}${process.env.unsplashUrls.RANDOM.url}?${urlParams}`,
                 options
@@ -59,13 +57,32 @@ export const actions = {
                     })
                 )
                 commit('add', result)
+                await fetch(`${process.env.baseUrl}/unsplash-api`, {
+                    method: 'POST',
+                    body: JSON.stringify(result),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
             } else {
-                // eslint-disable-next-line
-                console.error('Bro something went wrong ' + response.url)
+                const response = await fetch(
+                    `${process.env.baseUrl}/unsplash-api`,
+                    {
+                        method: 'GET'
+                    }
+                )
+                if (response.ok) {
+                    const json = await response.json()
+                    const result = Array.isArray(json) ? json : [json]
+                    commit('add', result.splice(state.images.length, 30))
+                } else {
+                    // eslint-disable-next-line
+                    console.error(`Can't read ${process.env.CATALOG_PATH}`)
+                }
             }
         } catch (err) {
             // eslint-disable-next-line
-            console.log('Aiee', err)
+            console.log('Store Catch Error ', err)
             return []
         }
     }

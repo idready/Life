@@ -6,6 +6,9 @@
                 :alt="image.description || 'Image description'"
                 decoding="auto"
             />
+            <!-- <span class="debug"
+                ><span class="text">{{ index + 1 }}</span></span
+            > -->
         </picture>
     </section>
 </template>
@@ -20,8 +23,9 @@
     grid-auto-flow: dense;
 }
 .image-item {
-    border: 1px solid tomato;
-    overflow: hidden;
+    // border: 1px solid tomato;
+    // overflow: hidden;
+    position: relative;
     &,
     img {
         line-height: 0;
@@ -30,6 +34,26 @@
         @include tablet {
             width: 100%;
         }
+    }
+    .debug {
+        align-items: center;
+        background: tomato;
+        border: 2px solid $white;
+        border-radius: 50%;
+        display: flex;
+        height: 5rem;
+        justify-content: center;
+        left: 0;
+        margin: 0 auto;
+        transform: translateY(-50%);
+        right: 0;
+        top: 50%;
+        position: absolute;
+        width: 5rem;
+    }
+    .text {
+        color: $white;
+        font-size: 2rem;
     }
 }
 </style>
@@ -70,8 +94,8 @@ export default {
         } else {
             this.images = JSON.parse(localStorage.getItem('unsplash_images'))
         }
-        this.resizeAllGridItems()
         this.setListeners()
+        this.resizeAllGridItems()
         window.dispatchEvent(
             new Event('resize', { bubbles: true, cancelable: false })
         )
@@ -99,6 +123,7 @@ export default {
                     (rowHeight + rowGap)
             )
             item.style.gridRowEnd = 'span ' + rowSpan // Why -1 ?
+            item.style.display = 'flex' // Force image to stretch in parent container and not more
         },
         resizeInstance(instance) {
             const item = instance.elements[0]

@@ -75,7 +75,7 @@ module.exports = {
     env: {
         applicationId: process.env.APPLICATION_ID,
         secret: process.env.SECRET,
-        baseUrl: process.env.BASE_URL || 'http://localhost:3000',
+        baseUrl: process.env.BASE_URL || `http://localhost:3002`,
         unsplashUrls: {
             BASE: 'https://api.unsplash.com/',
             RANDOM: { verb: 'GET', url: 'photos/random' },
