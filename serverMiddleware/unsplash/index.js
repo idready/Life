@@ -36,7 +36,7 @@ export default async function (req, res) {
         201: `Saved data successfully`,
         205: `Ok with initial file write`
     }
-    
+
     if (!reqData) {
         res.status(500).send('Please provide data')
         return
@@ -75,7 +75,6 @@ export default async function (req, res) {
                 }
             }
             data = [].concat(JSON.parse(fileData), req.body).filter((item) => Object.keys(item).length > 0)
-            // res.send(`File read ok ${JSON.stringify(data)}`)
             if (whiteData(data)) {
                 res.send('Ok Pal')
             } else {
