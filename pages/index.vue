@@ -1,14 +1,18 @@
 <template>
     <section class="images-container">
-        <picture v-for="image in images" :key="image.id" class="image-item">
+        <picture
+            v-for="(image, index) in images"
+            :key="image.id"
+            class="image-item"
+        >
             <img
                 :src="image.urls.regular"
                 :alt="image.description || 'Image description'"
                 decoding="auto"
             />
-            <!-- <span class="debug"
+            <span class="debug"
                 ><span class="text">{{ index + 1 }}</span></span
-            > -->
+            >
         </picture>
     </section>
 </template>
@@ -100,6 +104,7 @@ export default {
     },
     beforeMount() {
         window.addEventListener('resize', this.resizeAllGridItems)
+        window.addEventListener('scroll', this.infiniteScroll)
     },
     beforeDestroy() {
         window.removeEventListener('resize', this.resizeAllGridItems)
@@ -113,13 +118,13 @@ export default {
                 )
         },
         resizeAllGridItems() {
-            const allItems = document.getElementsByClassName('image-item')
+            const allItems = document.querySelectorAll('.image-item')
             for (let x = 0; x < allItems.length; x++) {
                 window.imagesLoaded(allItems[x], this.resizeInstance)
             }
         },
         resizeGridItem(item) {
-            const grid = document.getElementsByClassName('images-container')[0]
+            const grid = document.querySelector('.images-container')
             const rowHeight = parseInt(
                 window.getComputedStyle(grid).getPropertyValue('grid-auto-rows')
             )
@@ -144,6 +149,19 @@ export default {
                 console.log('All loaded')
                 this.triggerResize()
             })
+        },
+        infiniteScroll() {
+            const allImages = document.querySelectorAll('.image-item')
+            const lastImage = allImages[allImages.length - 1]
+            if (
+                lastImage &&
+                window.pageYOffset >= lastImage.getBoundingClientRect().top
+            ) {
+                console.log('load again')
+            } else {
+                console.log(`${window.pageYOffset}}`)
+                console.log(lastImage.getBoundingClientRect())
+            }
         }
     }
 }
