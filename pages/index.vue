@@ -94,15 +94,24 @@ export default {
         } else {
             this.images = JSON.parse(localStorage.getItem('unsplash_images'))
         }
-        this.setListeners()
-        this.resizeAllGridItems()
-        window.dispatchEvent(
-            new Event('resize', { bubbles: true, cancelable: false })
-        )
+        this.addListeners()
         // eslint-disable-next-line
         console.log(this.$store.state.images)
     },
+    beforeMount() {
+        window.addEventListener('resize', this.resizeAllGridItems)
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.resizeAllGridItems)
+    },
     methods: {
+        triggerResize() {
+            document
+                .querySelector('body')
+                .dispatchEvent(
+                    new Event('resize', { bubbles: true, cancelable: true })
+                )
+        },
         resizeAllGridItems() {
             const allItems = document.getElementsByClassName('image-item')
             for (let x = 0; x < allItems.length; x++) {
@@ -122,16 +131,19 @@ export default {
                     rowGap) /
                     (rowHeight + rowGap)
             )
-            item.style.gridRowEnd = 'span ' + rowSpan // Why -1 ?
+            item.style.gridRowEnd = 'span ' + rowSpan
             item.style.display = 'flex' // Force image to stretch in parent container and not more
         },
         resizeInstance(instance) {
             const item = instance.elements[0]
             this.resizeGridItem(item)
         },
-        setListeners() {
-            window.addEventListener('onload', this.resizeAllGridItems)
+        addListeners() {
             window.addEventListener('resize', this.resizeAllGridItems)
+            window.imagesLoaded('#images-container', () => {
+                console.log('All loaded')
+                this.triggerResize()
+            })
         }
     }
 }
