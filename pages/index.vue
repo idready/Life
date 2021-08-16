@@ -1,46 +1,168 @@
 <template>
-    <section class="section">
-        <div class="columns is-mobile">
-            <card title="Free" icon="github-circle">
-                Open source on
-                <a href="https://github.com/buefy/buefy">
-                    GitHubs
-                </a>
-            </card>
-
-            <card title="Responsive" icon="cellphone-link">
-                <b class="has-text-grey">
-                    Every
-                </b>
-                component is responsive
-            </card>
-
-            <card title="Modern" icon="alert-decagram">
-                Built with
-                <a href="https://vuejs.org/">
-                    Vue.js
-                </a>
-                and
-                <a href="http://bulma.io/">
-                    Bulma
-                </a>
-            </card>
-
-            <card title="Lightweight" icon="arrange-bring-to-front">
-                No other internal dependency
-            </card>
-        </div>
+    <section class="images-container">
+        <picture
+            v-for="(image, index) in images"
+            :key="image.id"
+            class="image-item"
+        >
+            <img
+                :src="image.urls.regular"
+                :alt="image.description || 'Image description'"
+                decoding="auto"
+            />
+            <span class="debug"
+                ><span class="text">{{ index + 1 }}</span></span
+            >
+        </picture>
     </section>
 </template>
 
+<style lang="scss" scoped>
+.images-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 3px;
+    // grid-auto-rows: minmax(100px, auto);
+    grid-auto-rows: 40px;
+    grid-auto-flow: dense;
+}
+.image-item {
+    // border: 1px solid tomato;
+    // overflow: hidden;
+    position: relative;
+    &,
+    img {
+        line-height: 0;
+    }
+    img {
+        @include tablet {
+            width: 100%;
+        }
+    }
+    .debug {
+        align-items: center;
+        background: tomato;
+        border: 2px solid $white;
+        border-radius: 50%;
+        display: flex;
+        height: 5rem;
+        justify-content: center;
+        left: 0;
+        margin: 0 auto;
+        transform: translateY(-50%);
+        right: 0;
+        top: 50%;
+        position: absolute;
+        width: 5rem;
+    }
+    .text {
+        color: $white;
+        font-size: 2rem;
+    }
+}
+</style>
 <script>
-import Card from '~/components/Card'
+// import { mapState } from 'vuex'
 
 export default {
-    name: 'HomePage',
-
-    components: {
-        Card
+    // middleware: 'unsplash',
+    layout: 'homepage',
+    head() {
+        return {
+            title: 'Life, enjoy Life!',
+            meta: [
+                {
+                    hid: 'description',
+                    name: 'description',
+                    content: 'A playground with nuxt framework'
+                }
+            ]
+        }
+    },
+    data() {
+        return {
+            images: []
+        }
+    },
+    // computed: mapState(['images']),
+    async fetch({ store, params }) {
+        await store.dispatch('getUnsplashImages')
+    },
+    mounted() {
+        if (this.$store.state.images.length) {
+            localStorage.setItem(
+                'unsplash_images',
+                JSON.stringify(this.$store.state.images)
+            )
+            this.images = this.$store.state.images
+        } else {
+            this.images = JSON.parse(localStorage.getItem('unsplash_images'))
+        }
+        this.addListeners()
+        // eslint-disable-next-line
+        console.log(this.$store.state.images)
+    },
+    beforeMount() {
+        window.addEventListener('resize', this.resizeAllGridItems)
+        window.addEventListener('scroll', this.infiniteScroll)
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.resizeAllGridItems)
+    },
+    methods: {
+        triggerResize() {
+            document
+                .querySelector('body')
+                .dispatchEvent(
+                    new Event('resize', { bubbles: true, cancelable: true })
+                )
+        },
+        resizeAllGridItems() {
+            const allItems = document.querySelectorAll('.image-item')
+            for (let x = 0; x < allItems.length; x++) {
+                window.imagesLoaded(allItems[x], this.resizeInstance)
+            }
+        },
+        resizeGridItem(item) {
+            const grid = document.querySelector('.images-container')
+            const rowHeight = parseInt(
+                window.getComputedStyle(grid).getPropertyValue('grid-auto-rows')
+            )
+            const rowGap = parseInt(
+                window.getComputedStyle(grid).getPropertyValue('grid-row-gap')
+            )
+            const rowSpan = Math.floor(
+                (item.querySelector('img').getBoundingClientRect().height +
+                    rowGap) /
+                    (rowHeight + rowGap)
+            )
+            item.style.gridRowEnd = 'span ' + rowSpan
+            item.style.display = 'flex' // Force image to stretch in parent container and not more
+        },
+        resizeInstance(instance) {
+            const item = instance.elements[0]
+            this.resizeGridItem(item)
+        },
+        addListeners() {
+            window.addEventListener('resize', this.resizeAllGridItems)
+            window.imagesLoaded('#images-container', () => {
+                console.log('All loaded')
+                this.triggerResize()
+            })
+        },
+        infiniteScroll() {
+            const allImages = document.querySelectorAll('.image-item')
+            const lastImage = allImages[allImages.length - 1]
+            if (
+                lastImage &&
+                window.pageYOffset >= lastImage.getBoundingClientRect().top
+            ) {
+                console.log('load again')
+            } else {
+                console.log(`${window.pageYOffset}}`)
+                console.log(lastImage.getBoundingClientRect())
+            }
+        }
     }
 }
 </script>
